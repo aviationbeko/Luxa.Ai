@@ -1,0 +1,1426 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Luxa.Ai V6.5</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#10024;</text></svg>">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Marked.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.1/marked.min.js"></script>
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+/* ═══════════ TEMALAR ═══════════ */
+:root, body.theme-pink-purple {
+  --bg-deep:#0c0814;
+  --bg-surface:#140e21;
+  --bg-card:#1c132e;
+  --bg-hover:#281b42;
+  --bg-input:#1a112c;
+  --accent-1:#c084fc; /* Mor */
+  --accent-2:#f0abcf; /* Toz Pembe */
+  --accent-glow:rgba(192,132,252,0.35);
+  --border:#2e1f47;
+  --border-light:rgba(192,132,252,0.22);
+  --text-main:#f8f6fc;
+  --text-sub:#b4a4cb;
+  --text-mute:#7d6a97;
+  --aurora-1:rgba(192,132,252,0.14);
+  --aurora-2:rgba(240,171,207,0.08);
+}
+
+body.theme-midnight {
+  --bg-deep:#060d1a;
+  --bg-surface:#0b1528;
+  --bg-card:#10203b;
+  --bg-hover:#182e54;
+  --bg-input:#0e1c33;
+  --accent-1:#38bdf8;
+  --accent-2:#818cf8;
+  --accent-glow:rgba(56,189,248,0.35);
+  --border:#1a3158;
+  --border-light:rgba(56,189,248,0.25);
+  --text-main:#f0f8ff;
+  --text-sub:#94b4db;
+  --text-mute:#5c7fa8;
+  --aurora-1:rgba(56,189,248,0.13);
+  --aurora-2:rgba(129,140,248,0.08);
+}
+
+body.theme-emerald {
+  --bg-deep:#05140d;
+  --bg-surface:#0a2016;
+  --bg-card:#0f2e20;
+  --bg-hover:#16422f;
+  --bg-input:#0d291c;
+  --accent-1:#34d399;
+  --accent-2:#a7f3d0;
+  --accent-glow:rgba(52,211,153,0.35);
+  --border:#174732;
+  --border-light:rgba(52,211,153,0.25);
+  --text-main:#f0fdf4;
+  --text-sub:#93c5aa;
+  --text-mute:#5a8a70;
+  --aurora-1:rgba(52,211,153,0.13);
+  --aurora-2:rgba(167,243,208,0.07);
+}
+
+body.theme-cyberpunk {
+  --bg-deep:#0f0914;
+  --bg-surface:#180d22;
+  --bg-card:#241033;
+  --bg-hover:#35164d;
+  --bg-input:#1d0d2a;
+  --accent-1:#f43f5e;
+  --accent-2:#facc15;
+  --accent-glow:rgba(244,63,94,0.38);
+  --border:#401758;
+  --border-light:rgba(244,63,94,0.28);
+  --text-main:#fff1f2;
+  --text-sub:#d4a0bb;
+  --text-mute:#8a5775;
+  --aurora-1:rgba(244,63,94,0.14);
+  --aurora-2:rgba(250,204,21,0.08);
+}
+
+/* ═══════════ FONTLAR ═══════════ */
+body.font-jakarta { font-family:'Plus Jakarta Sans',sans-serif; }
+body.font-inter { font-family:'Inter',sans-serif; }
+body.font-jetbrains { font-family:'JetBrains Mono',monospace; }
+body.font-poppins { font-family:'Poppins',sans-serif; }
+
+html,body{height:100%;overflow:hidden}
+body{
+  display:flex;
+  background:var(--bg-deep);
+  color:var(--text-main);
+  position:relative;
+  transition:background .3s,color .3s;
+}
+
+/* Auroras */
+.aurora-bg-1{
+  position:fixed;width:650px;height:650px;
+  top:-200px;right:-150px;
+  background:radial-gradient(circle,var(--aurora-1) 0%,transparent 70%);
+  filter:blur(60px);pointer-events:none;z-index:0;
+}
+.aurora-bg-2{
+  position:fixed;width:750px;height:750px;
+  bottom:-250px;left:-200px;
+  background:radial-gradient(circle,var(--aurora-2) 0%,transparent 70%);
+  filter:blur(70px);pointer-events:none;z-index:0;
+}
+
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-thumb{background:#3a2757;border-radius:3px}
+
+/* ═══════════ HAREKETLİ TOZ PEMBE & MOR GRADIENT METİN EFEKTİ ═══════════ */
+@keyframes auroraShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.glow-brand-text,
+.glow-pink-purple,
+.logo-text,
+.welcome-title,
+.msg-row.assistant .msg-name,
+.think-text,
+.msg-content strong,
+.msg-content b,
+.msg-content h1,
+.msg-content h2,
+.msg-content h3 {
+  background: linear-gradient(120deg, #f0abcf 0%, #c084fc 25%, #f472b6 50%, #d8b4fe 75%, #f0abcf 100%);
+  background-size: 260% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: auroraShimmer 4s ease infinite;
+}
+
+/* ═══════════ SIDEBAR ═══════════ */
+.sidebar{
+  width:270px;min-width:270px;
+  background:var(--bg-surface);
+  backdrop-filter:blur(16px);
+  display:flex;flex-direction:column;
+  border-right:1px solid var(--border);
+  z-index:10;
+  transition:transform .3s cubic-bezier(.4,0,.2,1);
+}
+.sidebar-header{padding:18px 16px 12px}
+.logo-box{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.logo-icon{
+  width:36px;height:36px;border-radius:11px;
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:17px;color:#fff;
+  box-shadow:0 4px 18px var(--accent-glow);
+}
+.logo-text{
+  font-size:1.25rem;font-weight:800;
+}
+.new-chat-btn{
+  width:100%;padding:10px 14px;border-radius:20px;
+  border:1px solid var(--border-light);
+  background:rgba(192,132,252,0.08);
+  color:var(--text-main);font-size:.86rem;font-weight:600;
+  cursor:pointer;display:flex;align-items:center;gap:8px;
+  transition:all .25s;font-family:inherit;
+}
+.new-chat-btn:hover{
+  background:rgba(192,132,252,0.18);
+  border-color:var(--accent-1);
+  transform:translateY(-1px);
+}
+.sidebar-label{padding:16px 16px 6px;font-size:.68rem;font-weight:700;color:var(--text-mute);text-transform:uppercase;letter-spacing:1px}
+.chat-list{flex:1;overflow-y:auto;padding:0 8px}
+.chat-item{
+  padding:9px 12px;border-radius:10px;cursor:pointer;
+  font-size:.84rem;color:var(--text-sub);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;
+  transition:all .2s;margin-bottom:2px;
+  display:flex;align-items:center;
+}
+.chat-item:hover{background:var(--bg-hover);color:var(--text-main);padding-left:15px}
+.chat-item.active{
+  background:var(--bg-card);color:var(--text-main);
+  border-left:3px solid var(--accent-2);padding-left:13px;
+}
+.chat-item .item-title{flex:1;overflow:hidden;text-overflow:ellipsis}
+.chat-item .item-actions{display:flex;gap:4px;opacity:0;transition:opacity .2s;flex-shrink:0}
+.chat-item:hover .item-actions{opacity:1}
+.chat-item .action-btn{
+  background:none;border:none;color:var(--text-mute);cursor:pointer;
+  font-size:.85rem;padding:2px 5px;border-radius:4px;
+}
+.chat-item .action-btn:hover{color:var(--accent-2)}
+
+.sidebar-footer{
+  padding:12px 16px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.settings-btn{
+  background:none;border:1px solid var(--border-light);
+  color:var(--text-sub);padding:6px 12px;border-radius:12px;
+  cursor:pointer;font-size:.78rem;font-weight:600;
+  display:flex;align-items:center;gap:6px;transition:all .2s;font-family:inherit;
+}
+.settings-btn:hover{
+  background:var(--bg-hover);color:var(--accent-2);border-color:var(--accent-1);
+}
+.ver-tag{font-size:.72rem;color:var(--accent-2);font-weight:700}
+
+/* ═══════════ MAIN VIEW ═══════════ */
+.main-view{flex:1;display:flex;flex-direction:column;min-width:0;position:relative;z-index:1}
+
+/* Top Navigation Bar */
+.top-nav{
+  height:60px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;background:rgba(20,14,33,0.5);backdrop-filter:blur(10px);
+}
+.top-left{display:flex;align-items:center;gap:14px}
+.top-title{font-size:.9rem;font-weight:700;color:var(--text-sub)}
+
+/* Auth Header */
+.top-right{display:flex;align-items:center;gap:12px}
+.auth-btn{
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  color:#fff;border:none;padding:8px 18px;border-radius:20px;
+  font-size:.84rem;font-weight:700;cursor:pointer;
+  box-shadow:0 3px 12px var(--accent-glow);transition:all .2s;
+  display:flex;align-items:center;gap:7px;font-family:inherit;
+}
+.auth-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px var(--accent-glow)}
+
+.user-profile-badge{
+  display:flex;align-items:center;gap:10px;background:var(--bg-card);
+  padding:5px 14px 5px 6px;border-radius:22px;border:1px solid var(--border-light);
+  cursor:pointer;transition:all .2s;
+}
+.user-profile-badge:hover{background:var(--bg-hover);border-color:var(--accent-1)}
+.user-avatar-circle{
+  width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:.85rem;color:#fff;overflow:hidden;
+}
+.user-avatar-circle img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.user-display-name{font-size:.84rem;font-weight:700;color:var(--text-main)}
+
+/* Welcome Screen */
+.welcome-screen{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:30px 24px;text-align:center;
+}
+.welcome-title{
+  font-size:3rem;font-weight:800;margin-bottom:8px;
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  letter-spacing:-.6px;
+}
+.welcome-sub{color:var(--text-sub);font-size:1.05rem;margin-bottom:32px;max-width:540px}
+
+/* DÜZGÜN & KALİTELİ ÖRNEK SORULAR */
+.chips-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  max-width:760px;width:100%;
+}
+@media(max-width:650px){.chips-grid{grid-template-columns:1fr}}
+.clean-chip{
+  padding:14px 18px;border-radius:18px;border:1px solid var(--border-light);
+  background:rgba(28,19,46,0.6);backdrop-filter:blur(8px);
+  color:var(--text-main);font-size:.88rem;font-weight:500;
+  cursor:pointer;transition:all .25s ease;font-family:inherit;
+  display:flex;align-items:flex-start;gap:12px;text-align:left;
+}
+.clean-chip:hover{
+  background:var(--bg-hover);border-color:var(--accent-1);
+  transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,0.3);
+}
+.chip-icon{font-size:1.3rem;line-height:1}
+.chip-content{flex:1}
+.chip-title{font-weight:700;color:var(--accent-2);margin-bottom:2px;font-size:.88rem}
+.chip-desc{font-size:.78rem;color:var(--text-sub);line-height:1.4}
+
+/* Chat area */
+.chat-area{flex:1;overflow-y:auto;display:none;scroll-behavior:smooth}
+.messages-box{max-width:800px;margin:0 auto;padding:24px 20px 10px}
+.msg-row{display:flex;gap:14px;padding:14px 0;animation:msgIn .3s ease-out}
+@keyframes msgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.msg-avatar{
+  width:34px;height:34px;border-radius:50%;display:flex;
+  align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;overflow:hidden;
+}
+.msg-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.msg-row.user .msg-avatar{background:var(--bg-hover);color:var(--accent-2)}
+.msg-row.assistant .msg-avatar{
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  color:#fff;box-shadow:0 3px 14px var(--accent-glow);
+}
+.msg-col{flex:1;min-width:0}
+.msg-name-bar{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.msg-name{font-size:.74rem;font-weight:700;color:var(--text-mute);letter-spacing:.6px}
+
+/* Thinking Badge */
+.thinking-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,rgba(192,132,252,0.15),rgba(240,171,207,0.12));
+  border:1.5px solid var(--border-light);border-radius:12px;
+  padding:8px 14px;margin-top:2px;
+  animation:thinkGlow 1.8s infinite alternate;
+}
+@keyframes thinkGlow{
+  from{box-shadow:0 2px 12px var(--accent-glow)}
+  to{box-shadow:0 6px 22px var(--accent-glow);border-color:var(--accent-2)}
+}
+.think-text{
+  font-size:.88rem;font-weight:700;
+  background:linear-gradient(90deg,var(--accent-1),var(--accent-2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.think-wave{display:flex;gap:3px}
+.think-wave span{
+  width:5px;height:5px;border-radius:50%;background:var(--accent-2);
+  animation:waveJump 1.2s infinite;
+}
+.think-wave span:nth-child(2){animation-delay:.2s}
+.think-wave span:nth-child(3){animation-delay:.4s}
+@keyframes waveJump{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+
+/* Message Body */
+.msg-content{line-height:1.75;font-size:.95rem;color:var(--text-main);word-wrap:break-word}
+.msg-content p{margin-bottom:10px}
+.msg-content p:last-child{margin-bottom:0}
+.msg-content strong, .msg-content b {
+  font-weight: 800;
+  display: inline;
+  filter: drop-shadow(0 0 8px rgba(240, 171, 207, 0.45));
+}
+.msg-content h1, .msg-content h2, .msg-content h3 {
+  margin: 14px 0 8px;
+  display: block;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  filter: drop-shadow(0 0 12px rgba(192, 132, 252, 0.45));
+}
+.msg-content h1 { font-size: 1.35rem; }
+.msg-content h2 { font-size: 1.18rem; }
+.msg-content h3 { font-size: 1.05rem; }
+.msg-content ul, .msg-content ol { padding-left: 20px; margin-bottom: 12px; }
+.msg-content li { margin-bottom: 4px; }
+.typing-cursor{
+  display:inline-block;width:2px;height:1.1em;background:var(--accent-2);
+  margin-left:2px;animation:blink .7s infinite;vertical-align:text-bottom;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* Input Box */
+.input-bar{padding:10px 24px 22px}
+.input-box{
+  max-width:800px;margin:0 auto;background:var(--bg-input);
+  border-radius:26px;display:flex;align-items:flex-end;
+  padding:6px 6px 6px 20px;border:1.5px solid var(--border-light);
+  transition:all .25s;box-shadow:0 4px 20px rgba(0,0,0,0.25);
+}
+.input-box:focus-within{
+  border-color:var(--accent-1);box-shadow:0 0 0 3px var(--accent-glow);
+}
+.input-box textarea{
+  flex:1;background:none;border:none;color:var(--text-main);
+  font-size:.95rem;resize:none;outline:none;line-height:1.5;
+  max-height:150px;padding:8px 0;font-family:inherit;
+}
+.input-box textarea::placeholder{color:var(--text-mute)}
+.send-btn{
+  width:40px;height:40px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  border:none;color:#fff;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;box-shadow:0 3px 14px var(--accent-glow);
+  transition:all .2s;
+}
+.send-btn:hover{transform:scale(1.08)}
+.send-btn:disabled{background:#26183e;box-shadow:none;cursor:default;transform:none;opacity:.5}
+.send-btn svg{width:18px;height:18px}
+
+/* ═══════════ MODALLER (GİRİŞ & GELİŞMİŞ AYARLAR) ═══════════ */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,0.72);backdrop-filter:blur(8px);
+  z-index:999;display:none;align-items:center;justify-content:center;padding:16px;
+}
+.modal-overlay.show{display:flex}
+.modal-card{
+  background:var(--bg-surface);border:1.5px solid var(--border-light);
+  border-radius:24px;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;
+  box-shadow:0 20px 60px rgba(0,0,0,0.65);padding:26px;position:relative;
+}
+.modal-header{
+  display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;
+}
+.modal-title{font-size:1.3rem;font-weight:800;color:var(--text-main)}
+.modal-close{
+  background:none;border:none;color:var(--text-mute);font-size:1.4rem;cursor:pointer;
+}
+.modal-close:hover{color:var(--accent-2)}
+
+.setting-group{margin-bottom:22px}
+.setting-title{
+  font-size:.82rem;font-weight:700;color:var(--accent-1);
+  margin-bottom:10px;text-transform:uppercase;letter-spacing:.6px;
+  display:flex;align-items:center;gap:6px;
+}
+
+.theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.theme-opt{
+  padding:12px;border-radius:14px;border:1px solid var(--border);
+  background:var(--bg-card);cursor:pointer;display:flex;align-items:center;gap:10px;
+  transition:all .2s;
+}
+.theme-opt:hover{border-color:var(--accent-1)}
+.theme-opt.active{border-color:var(--accent-2);background:var(--bg-hover)}
+.theme-preview{width:22px;height:22px;border-radius:50%}
+
+.form-input,.font-select,.custom-text-area{
+  width:100%;padding:11px 14px;border-radius:12px;background:var(--bg-card);
+  border:1px solid var(--border);color:var(--text-main);font-size:.9rem;outline:none;
+  font-family:inherit;margin-bottom:10px;
+}
+.form-input:focus,.font-select:focus,.custom-text-area:focus{border-color:var(--accent-1)}
+.custom-text-area{resize:vertical;min-height:75px;line-height:1.5}
+
+/* Auth Tabs & Official Google Button Container */
+.auth-tabs{display:flex;gap:10px;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:10px}
+.auth-tab{
+  flex:1;padding:8px;text-align:center;border-radius:10px;cursor:pointer;
+  font-weight:700;font-size:.88rem;color:var(--text-mute);transition:all .2s;
+}
+.auth-tab.active{background:rgba(192,132,252,0.15);color:var(--accent-2)}
+
+#officialGoogleBtnBox{
+  display:flex;justify-content:center;margin-bottom:16px;min-height:44px;
+}
+
+.auth-divider{
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;
+  color:var(--text-mute);font-size:.76rem;text-transform:uppercase;letter-spacing:.5px;
+}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.auth-error-msg{
+  background:rgba(244,63,94,0.15);border:1px solid rgba(244,63,94,0.3);
+  color:#fda4af;padding:9px 12px;border-radius:10px;font-size:.82rem;
+  margin-bottom:12px;display:none;
+}
+
+.submit-btn{
+  width:100%;padding:12px;border-radius:14px;border:none;
+  background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+  color:#fff;font-weight:700;font-size:.92rem;cursor:pointer;
+  box-shadow:0 4px 16px var(--accent-glow);transition:all .2s;font-family:inherit;
+}
+.submit-btn:hover{transform:translateY(-1px);box-shadow:0 6px 22px var(--accent-glow)}
+
+.danger-btn{
+  width:100%;padding:10px;border-radius:12px;border:1px solid rgba(244,63,94,0.3);
+  background:rgba(244,63,94,0.1);color:#fda4af;font-weight:600;font-size:.84rem;
+  cursor:pointer;transition:all .2s;font-family:inherit;
+}
+.danger-btn:hover{background:rgba(244,63,94,0.2)}
+.slider-control{width:100%;accent-color:var(--accent-2);cursor:pointer}
+</style>
+</head>
+<body class="theme-pink-purple font-jakarta">
+
+<div class="aurora-bg-1"></div>
+<div class="aurora-bg-2"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo-box">
+      <div class="logo-icon">L</div>
+      <span class="logo-text">Luxa.Ai V6.5</span>
+    </div>
+    <button class="new-chat-btn" onclick="startNewChat()">
+      <span>+</span> Yeni Sohbet
+    </button>
+  </div>
+  
+  <div class="sidebar-label">Sohbetler</div>
+  <div class="chat-list" id="chatList"></div>
+  
+  <div class="sidebar-footer">
+    <button class="settings-btn" onclick="openSettings()">
+      <span>⚙️</span> Ayarlar
+    </button>
+    <span class="ver-tag">v6.5</span>
+  </div>
+</aside>
+
+<!-- MAIN VIEW -->
+<main class="main-view">
+  <!-- Top Navigation -->
+  <div class="top-nav">
+    <div class="top-left">
+      <span class="top-title">✨ Akıllı Asistan</span>
+    </div>
+    
+    <div class="top-right">
+      <!-- Kullanıcı Profili & Giriş Yap Butonu -->
+      <div id="authSection">
+        <button class="auth-btn" onclick="openAuthModal('login')">
+          <span>👤</span> Giriş Yap
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Welcome Screen -->
+  <div class="welcome-screen" id="welcomeScreen">
+    <h1 class="welcome-title" id="welcomeGreeting">Merhaba! Ben Luxa.Ai V6.5</h1>
+    <p class="welcome-sub">Sorular sor, yeni fikirler üret, dertleş veya web sitelerini analiz ettir!</p>
+    
+    <!-- DÜZGÜN & KALİTELİ ÖRNEK SORULAR -->
+    <div class="chips-grid">
+      <button class="clean-chip" onclick="useCustomChip(this)">
+        <span class="chip-icon">🚀</span>
+        <div class="chip-content">
+          <div class="chip-title">Girişim & Proje Fikirleri</div>
+          <div class="chip-desc">2026 trendlerine uygun, düşük bütçeli 3 yaratıcı online iş fikri öner</div>
+        </div>
+      </button>
+
+      <button class="clean-chip" onclick="useCustomChip(this)">
+        <span class="chip-icon">🌍</span>
+        <div class="chip-content">
+          <div class="chip-title">İngilizce Konuşma Pratiği</div>
+          <div class="chip-desc">Benimle günlük konularda akıcı İngilizce sohbet et ve hatalarımı düzelt</div>
+        </div>
+      </button>
+
+      <button class="clean-chip" onclick="useCustomChip(this)">
+        <span class="chip-icon">✍️</span>
+        <div class="chip-content">
+          <div class="chip-title">Profesyonel Yazı & Başvuru</div>
+          <div class="chip-desc">İş başvurusu için etkileyici, samimi ve kurumsal bir ön yazı (cover letter) hazırla</div>
+        </div>
+      </button>
+
+      <button class="clean-chip" onclick="useCustomChip(this)">
+        <span class="chip-icon">🔗</span>
+        <div class="chip-content">
+          <div class="chip-title">Web Sayfası Özetleme</div>
+          <div class="chip-desc">https://tr.wikipedia.org/wiki/Yapay_zekâ bu linki en önemli 3 maddede özetle</div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <!-- Chat Area -->
+  <div class="chat-area" id="chatArea">
+    <div class="messages-box" id="messagesBox"></div>
+  </div>
+
+  <!-- Input Bar -->
+  <div class="input-bar">
+    <div class="input-box">
+      <textarea id="userInput" placeholder="Luxa.Ai'ye bir şeyler sor veya bir link yapıştır..." rows="1"
+        onkeydown="handleKey(event)" oninput="autoGrow(this)"></textarea>
+      <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9 22 2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════ GİRİŞ YAP & KAYIT OL MODAL ═══════════ -->
+<div class="modal-overlay" id="authModal" onclick="closeAuthIfOutside(event)">
+  <div class="modal-card" style="max-width:440px;">
+    <div class="modal-header">
+      <div class="modal-title" id="authModalTitle">Giriş Yap</div>
+      <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+    </div>
+
+    <!-- GOOGLE İLE GİRİŞ YAP BUTONU -->
+    <div id="officialGoogleBtnBox"></div>
+
+    <div class="auth-divider">veya e-posta ile</div>
+
+    <div class="auth-error-msg" id="authErrorMsg"></div>
+
+    <div class="auth-tabs">
+      <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Giriş Yap</div>
+      <div class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Kayıt Ol</div>
+    </div>
+
+    <form id="authForm" onsubmit="handleAuthSubmit(event)">
+      <div id="nameFieldGroup" style="display:none;">
+        <input type="text" class="form-input" id="authName" placeholder="Adın ve Soyadın">
+      </div>
+      <input type="email" class="form-input" id="authEmail" placeholder="E-Posta Adresin" required>
+      <input type="password" class="form-input" id="authPassword" placeholder="Şifren (En az 4 karakter)" minlength="4" required>
+      <button type="submit" class="submit-btn" id="authSubmitBtn" style="margin-top:6px;">Giriş Yap</button>
+    </form>
+  </div>
+</div>
+
+<!-- ═══════════ GELİŞMİŞ AYARLAR MODAL ═══════════ -->
+<div class="modal-overlay" id="settingsModal" onclick="closeSettingsIfOutside(event)">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">⚙️ Gelişmiş Ayarlar</div>
+      <button class="modal-close" onclick="closeSettings()">&times;</button>
+    </div>
+
+    <!-- 1: Kişilik (Persona) -->
+    <div class="setting-group">
+      <div class="setting-title">🎭 Luxa.Ai Kişilik Modu</div>
+      <select class="font-select" id="personaSelect" onchange="setPersona(this.value)">
+        <option value="friendly">🌸 Samimi & Arkadaş Canlısı (Varsayılan)</option>
+        <option value="professional">👔 Resmi & Profesyonel Danışman</option>
+        <option value="witty">⚡ Esprili & Sivri Dilli (Mizahi Yaklaşım)</option>
+        <option value="creative">🎨 Yaratıcı & Edebi Vizyoner</option>
+      </select>
+    </div>
+
+    <!-- 2: Özel Sistem Talimatları -->
+    <div class="setting-group">
+      <div class="setting-title">📝 Özel Talimatlar (Custom Instructions)</div>
+      <textarea class="custom-text-area" id="customInstructions" placeholder="Örn: Bana her zaman maddeler halinde cevap ver, ya da 'Bana her zaman Osman diye hitap et'..." oninput="saveCustomInstructions(this.value)"></textarea>
+    </div>
+
+    <!-- 3: AI Sıcaklığı / Yaratıcılık Seviyesi -->
+    <div class="setting-group">
+      <div class="setting-title">🌡️ AI Yaratıcılık Seviyesi (Temperature)</div>
+      <div style="display:flex;justify-content:space-between;font-size:.78rem;color:var(--text-sub);margin-bottom:4px;">
+        <span id="tempLabel">Dengeli & Zeki</span>
+        <span id="tempVal">0.7</span>
+      </div>
+      <input type="range" class="slider-control" min="0.2" max="1.0" step="0.1" value="0.7" id="tempSlider" oninput="updateTemperature(this.value)">
+    </div>
+
+    <!-- 4: Tema Seçici -->
+    <div class="setting-group">
+      <div class="setting-title">🎨 Görsel Tema</div>
+      <div class="theme-grid">
+        <div class="theme-opt" id="themeOpt_pink_purple" onclick="setTheme('theme-pink-purple')">
+          <div class="theme-preview" style="background:linear-gradient(135deg,#c084fc,#f0abcf)"></div>
+          <span>Mor & Toz Pembe</span>
+        </div>
+        <div class="theme-opt" id="themeOpt_midnight" onclick="setTheme('theme-midnight')">
+          <div class="theme-preview" style="background:linear-gradient(135deg,#38bdf8,#818cf8)"></div>
+          <span>Gece Mavisi</span>
+        </div>
+        <div class="theme-opt" id="themeOpt_emerald" onclick="setTheme('theme-emerald')">
+          <div class="theme-preview" style="background:linear-gradient(135deg,#34d399,#a7f3d0)"></div>
+          <span>Zümrüt Yeşili</span>
+        </div>
+        <div class="theme-opt" id="themeOpt_cyberpunk" onclick="setTheme('theme-cyberpunk')">
+          <div class="theme-preview" style="background:linear-gradient(135deg,#f43f5e,#facc15)"></div>
+          <span>Siberpunk Neon</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5: Yazı Tipi -->
+    <div class="setting-group">
+      <div class="setting-title">🔤 Yazı Tipi (Font)</div>
+      <select class="font-select" onchange="setFont(this.value)" id="fontSelect">
+        <option value="font-jakarta">Plus Jakarta Sans (Modern & Şık)</option>
+        <option value="font-inter">Inter (Minimalist & Temiz)</option>
+        <option value="font-jetbrains">JetBrains Mono (Teknik & Monospace)</option>
+        <option value="font-poppins">Poppins (Tatlı & Yuvarlak)</option>
+      </select>
+    </div>
+
+    <!-- 6: Veri ve Sohbet Yönetimi -->
+    <div class="setting-group">
+      <div class="setting-title">💾 Veri & Sohbet Yönetimi</div>
+      <div style="display:flex;gap:10px;margin-bottom:10px;">
+        <button class="auth-btn" onclick="exportChats()" style="flex:1;justify-content:center;padding:10px;border-radius:12px;">📥 Sohbetleri Yedekle (JSON)</button>
+      </div>
+      <button class="danger-btn" onclick="clearAllChats()">🗑️ Bu Hesabın Sohbetlerini Sıfırla</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════ HESABA ÖZEL ÇOKLU KULLANICI STATE ═══════════ */
+let currentUser = JSON.parse(localStorage.getItem('luxa_active_user') || 'null');
+let chats = [];
+let activeId = null;
+let isBusy = false;
+
+let userSettings = {
+  theme: 'theme-pink-purple',
+  font: 'font-jakarta',
+  persona: 'friendly',
+  custom_instructions: '',
+  temperature: 0.7
+};
+
+const $ = id => document.getElementById(id);
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+
+/* ═══════════ %100 STATİK SİTE (SERVERLESS) BULUT ENTEGRASYONU ═══════════ */
+const OPENROUTER_API_KEY = "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";
+const FREE_MODELS = [
+  "minimax/minimax-m3.1-flash:free",
+  "google/gemma-4-31b-it:free",
+  "google/gemma-4-26b-a4b-it:free",
+  "nvidia/nemotron-3.5-lightning:free",
+  "poolside/laguna-s-2.1:free"
+];
+const SUPABASE_URL = "https://ltuitberpsitftyehxft.supabase.co";
+const SUPABASE_KEY = "sb_publishable_9k_Z1Lc728OWBLehpJt-AQ_jvvOKPKk";
+const GOOGLE_CLIENT_ID = "13755074856-qsv663i98sgqqf5eid7fk6ckc6s62ram.apps.googleusercontent.com";
+
+/* ═══════════ SUPABASE İSTEMCİSİ & ŞİFRELEME ═══════════ */
+async function hashPw(password) {
+  const msgBuffer = new TextEncoder().encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function getSupabaseUser(email) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/users?email=eq.${encodeURIComponent(email)}&select=*`, {
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`
+      }
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data && data.length > 0 ? data[0] : null;
+  } catch (e) {
+    console.error("Supabase okuma hatası:", e);
+    return null;
+  }
+}
+
+async function saveSupabaseUser(userData) {
+  try {
+    await fetch(`${SUPABASE_URL}/rest/v1/users`, {
+      method: "POST",
+      headers: {
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates"
+      },
+      body: JSON.stringify(userData)
+    });
+  } catch (e) {
+    console.error("Supabase kaydetme hatası:", e);
+  }
+}
+
+/* ═══════════ GOOGLE IDENTITY SERVICES ENTEGRASYONU ═══════════ */
+function initOfficialGoogleGIS() {
+  if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+    setTimeout(initOfficialGoogleGIS, 200);
+    return;
+  }
+
+  try {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleCredentialResponse,
+      auto_select: false,
+      cancel_on_tap_outside: true
+    });
+
+    const btnBox = $('officialGoogleBtnBox');
+    if (btnBox) {
+      btnBox.innerHTML = '';
+      google.accounts.id.renderButton(btnBox, {
+        theme: 'filled_black',
+        size: 'large',
+        type: 'standard',
+        shape: 'pill',
+        text: 'signin_with',
+        logo_alignment: 'left',
+        width: 320
+      });
+    }
+
+    if (!currentUser) {
+      google.accounts.id.prompt();
+    }
+  } catch (err) {
+    console.error("Google GIS Hatası:", err);
+  }
+}
+
+function parseJwt(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    return null;
+  }
+}
+
+async function handleGoogleCredentialResponse(response) {
+  const payload = parseJwt(response.credential);
+  if (!payload || !payload.email) {
+    alert("Google doğrulaması çözülemedi.");
+    return;
+  }
+
+  const googleEmail = payload.email.trim().lower();
+  const googleName = payload.name || googleEmail.split('@')[0];
+  const googlePicture = payload.picture;
+
+  let user = await getSupabaseUser(googleEmail);
+  if (!user) {
+    user = {
+      name: googleName,
+      email: googleEmail,
+      password: "GOOGLE_AUTH_ACCOUNT",
+      picture: googlePicture || "https://api.iconify.design/logos:google-icon.svg",
+      auth_type: "google",
+      created_at: Date.now() / 1000,
+      settings: {
+        theme: "theme-pink-purple",
+        font: "font-jakarta",
+        persona: "friendly",
+        custom_instructions: "",
+        temperature: 0.7
+      },
+      chats: []
+    };
+  } else {
+    user.name = googleName;
+    if (googlePicture) user.picture = googlePicture;
+  }
+
+  await saveSupabaseUser(user);
+  loadUserSession(user);
+  closeAuthModal();
+}
+
+/* ═══════════ HESABA ÖZEL VERİ SENKRONİZASYONU ═══════════ */
+function syncCurrentUserData() {
+  if (!currentUser) {
+    localStorage.setItem('luxa_guest_chats', JSON.stringify(chats));
+    localStorage.setItem('luxa_guest_settings', JSON.stringify(userSettings));
+    return;
+  }
+  
+  currentUser.chats = chats;
+  currentUser.settings = userSettings;
+  localStorage.setItem('luxa_active_user', JSON.stringify(currentUser));
+  
+  saveSupabaseUser({
+    email: currentUser.email,
+    name: currentUser.name,
+    password: currentUser.password || null,
+    picture: currentUser.picture || null,
+    auth_type: currentUser.auth_type || 'email',
+    created_at: currentUser.created_at || (Date.now() / 1000),
+    chats: chats,
+    settings: userSettings
+  });
+}
+
+function loadUserSession(userData) {
+  currentUser = userData;
+  localStorage.setItem('luxa_active_user', JSON.stringify(currentUser));
+  
+  chats = userData.chats || [];
+  userSettings = Object.assign({}, {
+    theme: 'theme-pink-purple',
+    font: 'font-jakarta',
+    persona: 'friendly',
+    custom_instructions: '',
+    temperature: 0.7
+  }, userData.settings || {});
+  
+  activeId = null;
+  applyUserSettings();
+  updateAuthUI();
+  renderSidebar();
+  startNewChat();
+}
+
+function loadGuestSession() {
+  currentUser = null;
+  localStorage.removeItem('luxa_active_user');
+  chats = JSON.parse(localStorage.getItem('luxa_guest_chats') || '[]');
+  userSettings = JSON.parse(localStorage.getItem('luxa_guest_settings') || JSON.stringify({
+    theme: 'theme-pink-purple',
+    font: 'font-jakarta',
+    persona: 'friendly',
+    custom_instructions: '',
+    temperature: 0.7
+  }));
+  activeId = null;
+  applyUserSettings();
+  updateAuthUI();
+  renderSidebar();
+  startNewChat();
+}
+
+function updateAuthUI() {
+  const container = $('authSection');
+  if (currentUser) {
+    const avatarContent = currentUser.picture && currentUser.picture.startsWith('http')
+      ? `<img src="${currentUser.picture}" alt="${currentUser.name}" referrerpolicy="no-referrer">`
+      : currentUser.name.charAt(0).toUpperCase();
+
+    container.innerHTML = `
+      <div class="user-profile-badge" onclick="handleUserLogout()" title="Çıkış yapmak için tıkla">
+        <div class="user-avatar-circle">${avatarContent}</div>
+        <span class="user-display-name">${currentUser.name}</span>
+        <span style="font-size:.7rem;color:var(--text-mute);" title="Çıkış Yap">🚪</span>
+      </div>
+    `;
+    $('welcomeGreeting').textContent = `Hoş geldin, ${currentUser.name}! ✨`;
+  } else {
+    container.innerHTML = `
+      <button class="auth-btn" onclick="openAuthModal('login')">
+        <span>👤</span> Giriş Yap
+      </button>
+    `;
+    $('welcomeGreeting').textContent = "Merhaba! Ben Luxa.Ai V6.5";
+  }
+}
+
+function openAuthModal(mode) {
+  $('authErrorMsg').style.display = 'none';
+  switchAuthTab(mode);
+  $('authModal').classList.add('show');
+  initOfficialGoogleGIS();
+}
+function closeAuthModal() { $('authModal').classList.remove('show'); }
+function closeAuthIfOutside(e) { if (e.target.id === 'authModal') closeAuthModal(); }
+
+function switchAuthTab(mode) {
+  currentAuthMode = mode;
+  $('authErrorMsg').style.display = 'none';
+  if (mode === 'login') {
+    $('tabLogin').classList.add('active');
+    $('tabRegister').classList.remove('active');
+    $('nameFieldGroup').style.display = 'none';
+    $('authModalTitle').textContent = 'Giriş Yap';
+    $('authSubmitBtn').textContent = 'Giriş Yap';
+  } else {
+    $('tabRegister').classList.add('active');
+    $('tabLogin').classList.remove('active');
+    $('nameFieldGroup').style.display = 'block';
+    $('authModalTitle').textContent = 'Kayıt Ol';
+    $('authSubmitBtn').textContent = 'Hesap Oluştur';
+  }
+}
+
+async function handleAuthSubmit(e) {
+  e.preventDefault();
+  const errorBox = $('authErrorMsg');
+  errorBox.style.display = 'none';
+
+  const email = $('authEmail').value.trim().lower();
+  const password = $('authPassword').value.trim();
+  const name = $('authName').value.trim();
+
+  const submitBtn = $('authSubmitBtn');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Lütfen bekleyin... ⏳';
+
+  try {
+    const pwHash = await hashPw(password);
+    const existingUser = await getSupabaseUser(email);
+
+    if (currentAuthMode === 'login') {
+      if (!existingUser) {
+        errorBox.textContent = "Bu e-posta adresiyle kayıtlı hesap bulunamadı!";
+        errorBox.style.display = 'block';
+        return;
+      }
+      if (existingUser.password !== pwHash) {
+        errorBox.textContent = "Hatalı şifre girdiniz!";
+        errorBox.style.display = 'block';
+        return;
+      }
+      loadUserSession(existingUser);
+      closeAuthModal();
+    } else {
+      // Kayıt
+      if (existingUser) {
+        errorBox.textContent = "Bu e-posta adresi ile zaten bir hesap var!";
+        errorBox.style.display = 'block';
+        return;
+      }
+      const newUser = {
+        name: name || email.split('@')[0],
+        email: email,
+        password: pwHash,
+        picture: null,
+        auth_type: 'email',
+        created_at: Date.now() / 1000,
+        settings: {
+          theme: 'theme-pink-purple',
+          font: 'font-jakarta',
+          persona: 'friendly',
+          custom_instructions: '',
+          temperature: 0.7
+        },
+        chats: []
+      };
+      await saveSupabaseUser(newUser);
+      loadUserSession(newUser);
+      closeAuthModal();
+    }
+  } catch (err) {
+    errorBox.textContent = "Veritabanı bağlantı hatası. Lütfen tekrar deneyin.";
+    errorBox.style.display = 'block';
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = currentAuthMode === 'login' ? 'Giriş Yap' : 'Hesap Oluştur';
+  }
+}
+
+function handleUserLogout() {
+  if (confirm("Mevcut hesaptan çıkış yapmak istiyor musunuz?")) {
+    if (typeof google !== 'undefined' && google.accounts && google.accounts.id) {
+      google.accounts.id.disableAutoSelect();
+    }
+    loadGuestSession();
+  }
+}
+
+/* ═══════════ GELİŞMİŞ AYARLAR MOTORU ═══════════ */
+function applyUserSettings() {
+  document.body.className = `${userSettings.theme} ${userSettings.font}`;
+  if ($('fontSelect')) $('fontSelect').value = userSettings.font;
+  if ($('personaSelect')) $('personaSelect').value = userSettings.persona;
+  if ($('customInstructions')) $('customInstructions').value = userSettings.custom_instructions || '';
+  if ($('tempSlider')) {
+    $('tempSlider').value = userSettings.temperature;
+    $('tempVal').textContent = userSettings.temperature;
+    updateTempLabel(userSettings.temperature);
+  }
+  
+  document.querySelectorAll('.theme-opt').forEach(el => el.classList.remove('active'));
+  const themeMap = {
+    'theme-pink-purple': 'themeOpt_pink_purple',
+    'theme-midnight': 'themeOpt_midnight',
+    'theme-emerald': 'themeOpt_emerald',
+    'theme-cyberpunk': 'themeOpt_cyberpunk'
+  };
+  const targetId = themeMap[userSettings.theme];
+  if (targetId && $(targetId)) $(targetId).classList.add('active');
+}
+
+function setTheme(name) {
+  userSettings.theme = name;
+  applyUserSettings();
+  syncCurrentUserData();
+}
+function setFont(name) {
+  userSettings.font = name;
+  applyUserSettings();
+  syncCurrentUserData();
+}
+function setPersona(val) {
+  userSettings.persona = val;
+  syncCurrentUserData();
+}
+function saveCustomInstructions(val) {
+  userSettings.custom_instructions = val;
+  syncCurrentUserData();
+}
+function updateTemperature(val) {
+  userSettings.temperature = parseFloat(val);
+  $('tempVal').textContent = userSettings.temperature;
+  updateTempLabel(userSettings.temperature);
+  syncCurrentUserData();
+}
+function updateTempLabel(val) {
+  const lbl = $('tempLabel');
+  if (!lbl) return;
+  if (val <= 0.3) lbl.textContent = "Hassas & Kesin";
+  else if (val <= 0.7) lbl.textContent = "Dengeli & Zeki";
+  else lbl.textContent = "Yaratıcı & Çılgın";
+}
+
+function exportChats() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(chats, null, 2));
+  const dlAnchor = document.createElement('a');
+  dlAnchor.setAttribute("href", dataStr);
+  dlAnchor.setAttribute("download", `${currentUser ? currentUser.name : 'misafir'}_luxa_sohbetler.json`);
+  document.body.appendChild(dlAnchor);
+  dlAnchor.click();
+  dlAnchor.remove();
+}
+
+function clearAllChats() {
+  if (confirm("Bu hesabın tüm sohbet geçmişini silmek istediğine emin misin?")) {
+    chats = [];
+    activeId = null;
+    syncCurrentUserData();
+    renderSidebar();
+    startNewChat();
+    closeSettings();
+  }
+}
+
+function openSettings() { $('settingsModal').classList.add('show'); }
+function closeSettings() { $('settingsModal').classList.remove('show'); }
+function closeSettingsIfOutside(e) { if (e.target.id === 'settingsModal') closeSettings(); }
+
+/* ═══════════ SOHBET YÖNETİMİ ═══════════ */
+function startNewChat() {
+  activeId = null;
+  $('welcomeScreen').style.display = 'flex';
+  $('chatArea').style.display = 'none';
+  $('messagesBox').innerHTML = '';
+  renderSidebar();
+  $('userInput').focus();
+}
+
+function loadChat(id) {
+  activeId = id;
+  const c = chats.find(x => x.id === id);
+  if (!c) return;
+  $('welcomeScreen').style.display = 'none';
+  $('chatArea').style.display = 'block';
+  $('messagesBox').innerHTML = '';
+  c.messages.forEach(m => appendDOM(m.role, m.content));
+  renderSidebar();
+  scrollEnd();
+}
+
+function renderSidebar() {
+  const el = $('chatList');
+  el.innerHTML = '';
+  chats.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'chat-item' + (c.id === activeId ? ' active' : '');
+    d.onclick = () => loadChat(c.id);
+    d.innerHTML = `
+      <span class="item-title">${c.title || 'Yeni Sohbet'}</span>
+      <span class="item-actions">
+        <button class="action-btn" onclick="delChat('${c.id}', event)">&times;</button>
+      </span>
+    `;
+    el.appendChild(d);
+  });
+}
+
+function delChat(id, e) {
+  e.stopPropagation();
+  chats = chats.filter(c => c.id !== id);
+  syncCurrentUserData();
+  if (activeId === id) startNewChat();
+  renderSidebar();
+}
+
+/* ═══════════ YARDIMCI MARKDOWN VE PARILTI FONKSİYONU ═══════════ */
+function renderAssistantMarkdown(text) {
+  let html = marked.parse(text || '');
+  html = html.replace(/(?<!<[^>]*)\b(Luxa\.Ai|Luxa)\b(?![^<]*>)/gi, '<span class="glow-brand-text">$1</span>');
+  return html;
+}
+
+/* ═══════════ MESAJLAR ═══════════ */
+function appendDOM(role, content) {
+  const box = $('messagesBox');
+  const row = document.createElement('div');
+  row.className = 'msg-row ' + role;
+  const isUser = role === 'user';
+  
+  let avatar = 'L';
+  if (isUser) {
+    if (currentUser && currentUser.picture && currentUser.picture.startsWith('http')) {
+      avatar = `<img src="${currentUser.picture}" alt="${currentUser.name}" referrerpolicy="no-referrer">`;
+    } else if (currentUser) {
+      avatar = currentUser.name.charAt(0).toUpperCase();
+    } else {
+      avatar = 'S';
+    }
+  }
+
+  const name = isUser ? (currentUser ? currentUser.name.toUpperCase() : 'SEN') : 'LUXA.Aİ';
+
+  row.innerHTML = `
+    <div class="msg-avatar">${avatar}</div>
+    <div class="msg-col">
+      <div class="msg-name-bar">
+        <span class="msg-name">${name}</span>
+      </div>
+      <div class="msg-content">${isUser ? marked.parse(content || '') : renderAssistantMarkdown(content || '')}</div>
+    </div>
+  `;
+  box.appendChild(row);
+  return row;
+}
+
+/* ═══════════ MESAJ GÖNDERME & STREAMING ═══════════ */
+async function sendMessage() {
+  const inp = $('userInput');
+  const text = inp.value.trim();
+  if (!text || isBusy) return;
+
+  isBusy = true;
+  $('sendBtn').disabled = true;
+  inp.value = '';
+  autoGrow(inp);
+
+  $('welcomeScreen').style.display = 'none';
+  $('chatArea').style.display = 'block';
+
+  let currentChat = chats.find(c => c.id === activeId);
+  if (!currentChat) {
+    currentChat = { id: uid(), title: text.slice(0, 36), messages: [] };
+    chats.unshift(currentChat);
+    activeId = currentChat.id;
+    syncCurrentUserData();
+    renderSidebar();
+  }
+
+  currentChat.messages.push({ role: 'user', content: text });
+  syncCurrentUserData();
+  appendDOM('user', text);
+  scrollEnd();
+
+  const box = $('messagesBox');
+  const assistRow = document.createElement('div');
+  assistRow.className = 'msg-row assistant';
+  assistRow.innerHTML = `
+    <div class="msg-avatar">L</div>
+    <div class="msg-col">
+      <div class="msg-name-bar"><span class="msg-name">LUXA.Aİ</span></div>
+      <div class="msg-content">
+        <div class="thinking-badge" id="liveThinking">
+          <span>✨</span>
+          <span class="think-text">Düşünüyor...</span>
+          <div class="think-wave"><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </div>
+  `;
+  box.appendChild(assistRow);
+  scrollEnd();
+
+  const contentBox = assistRow.querySelector('.msg-content');
+
+  // URL İçeriği Çözümleme
+  let webContext = '';
+  try {
+    const urls = text.match(/https?:\/\/[^\s<>"]+|www\.[^\s<>"]+/g);
+    if (urls) {
+      let u = urls[0];
+      if (!u.startsWith('http')) u = 'https://' + u;
+      const proxyRes = await fetch(`https://api.allorigins.win/raw?url=${encodeURIComponent(u)}`, { signal: AbortSignal.timeout(5000) });
+      if (proxyRes.ok) {
+        const html = await proxyRes.text();
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        ['script', 'style', 'nav', 'footer', 'header', 'noscript'].forEach(tag => doc.querySelectorAll(tag).forEach(el => el.remove()));
+        const clean = (doc.body.innerText || '').replace(/\s+/g, ' ').trim().slice(0, 3000);
+        if (clean) {
+          webContext = `\n\n[Sistem Notu: Kullanıcının verdiği ${u} web sitesi içeriği:\n${clean}\nLütfen bunu inceleyerek kullanıcıya özetle.]`;
+        }
+      }
+    }
+  } catch (e) {}
+
+  // Sistem Rolü Promptu
+  let sysPrompt = "Sen Luxa.Ai adinda gelismis, zeki, faydali ve profesyonel bir Turkce yapay zeka asistanisin. "
+    + "Kullaniciya daima net, akici, zengin ve estetik cevap ver. "
+    + "Cevaplarinda onemli yerleri, kilit kavramlari ve can alici noktalarini mutlaka kalin (**ornek**) olarak vurgula ve basliklar (### Baslik) kullan. "
+    + "Adin sorulursa veya kendinden bahsederken Luxa.Ai adini kullan.";
+
+  if (userSettings.persona === "professional") {
+    sysPrompt += " Ciddi, kurumsal, analitik ve akademik bir ton kullan.";
+  } else if (userSettings.persona === "witty") {
+    sysPrompt += " Sivri dilli, esprili ve zeki bir mizahi yaklasim sergile.";
+  } else if (userSettings.persona === "creative") {
+    sysPrompt += " Cok yaratici, edebi, renkli ve metaforik bir dil kullan.";
+  } else {
+    sysPrompt += " Samimi, sicak ve icten bir arkadas gibi konus.";
+  }
+
+  if (userSettings.custom_instructions && userSettings.custom_instructions.trim()) {
+    sysPrompt += `\n[Kullanıcının Özel Talimatı: ${userSettings.custom_instructions.trim()}]`;
+  }
+
+  const apiMessages = [{ role: "system", content: sysPrompt }];
+  currentChat.messages.forEach((m, idx) => {
+    let c = m.content;
+    if (idx === currentChat.messages.length - 1 && m.role === "user" && webContext) {
+      c += webContext;
+    }
+    apiMessages.push({ role: m.role, content: c });
+  });
+
+  let accumulated = '';
+  let started = false;
+  let success = false;
+
+  for (const model of FREE_MODELS) {
+    try {
+      const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${OPENROUTER_API_KEY}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": window.location.origin,
+          "X-Title": "Luxa.Ai V6.5"
+        },
+        body: JSON.stringify({
+          model: model,
+          messages: apiMessages,
+          stream: true,
+          temperature: userSettings.temperature || 0.7
+        })
+      });
+
+      if (!res.ok) continue;
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
+
+        for (const line of lines) {
+          const tr = line.trim();
+          if (!tr.startsWith('data: ')) continue;
+          const p = tr.slice(6);
+          if (p === '[DONE]') break;
+          try {
+            const j = JSON.parse(p);
+            const chunk = (j.choices && j.choices[0] && j.choices[0].delta && j.choices[0].delta.content) || '';
+            if (chunk) {
+              if (!started) {
+                started = true;
+                contentBox.innerHTML = '';
+              }
+              accumulated += chunk;
+              contentBox.innerHTML = renderAssistantMarkdown(accumulated) + '<span class="typing-cursor"></span>';
+              scrollEnd();
+            }
+          } catch (e) {}
+        }
+      }
+
+      if (accumulated && accumulated.trim()) {
+        success = true;
+        break;
+      }
+    } catch (err) {
+      console.warn(`Model ${model} hatası:`, err);
+    }
+  }
+
+  if (success) {
+    contentBox.innerHTML = renderAssistantMarkdown(accumulated);
+    currentChat.messages.push({ role: 'assistant', content: accumulated });
+    syncCurrentUserData();
+    scrollEnd();
+  } else {
+    contentBox.innerHTML = '<p style="color:#f472b6;">Sunucular şu an çok yoğun, lütfen birkaç saniye sonra tekrar dene!</p>';
+  }
+
+  isBusy = false;
+  $('sendBtn').disabled = false;
+  inp.focus();
+}
+
+function useCustomChip(buttonEl) {
+  const desc = buttonEl.querySelector('.chip-desc').textContent;
+  $('userInput').value = desc;
+  sendMessage();
+}
+
+/* ═══════════ UI HELPERS ═══════════ */
+function handleKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+}
+function autoGrow(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 150) + 'px';
+}
+function scrollEnd() {
+  const el = $('chatArea');
+  requestAnimationFrame(() => el.scrollTop = el.scrollHeight);
+}
+
+/* ═══════════ BAŞLATMA (SESSION INITIALIZE) ═══════════ */
+if (currentUser) {
+  loadUserSession(currentUser);
+} else {
+  loadGuestSession();
+}
+
+// Google kütüphanesini hazırla
+window.onload = function() {
+  initOfficialGoogleGIS();
+};
+</script>
+</body>
+</html>
