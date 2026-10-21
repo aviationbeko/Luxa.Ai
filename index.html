@@ -275,7 +275,102 @@ body{
   display:grid;grid-template-columns:1fr 1fr;gap:12px;
   max-width:760px;width:100%;
 }
-@media(max-width:650px){.chips-grid{grid-template-columns:1fr}}
+/* ═══════════ MOBİL RESPONSIVE ═══════════ */
+
+/* Hamburger butonu - sadece mobilde görünür */
+.hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-main);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 10px;
+  transition: background .2s;
+  flex-shrink: 0;
+}
+.hamburger-btn svg { width: 22px; height: 22px; display: block; }
+.hamburger-btn:hover { background: var(--bg-hover); }
+
+/* Sidebar close button - sadece mobilde görünür */
+.sidebar-close-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-mute);
+  cursor: pointer;
+  font-size: 1.1rem;
+  padding: 4px 8px;
+  border-radius: 8px;
+  margin-left: auto;
+  line-height: 1;
+  transition: all .2s;
+}
+.sidebar-close-btn:hover { color: var(--text-main); background: var(--bg-hover); }
+
+/* Sidebar overlay - arka plan karartma (mobile) */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  z-index: 99;
+  backdrop-filter: blur(2px);
+}
+.sidebar-overlay.active { display: block; }
+
+@media (max-width: 768px) {
+  /* Hamburger ve close butonları göster */
+  .hamburger-btn { display: flex; align-items: center; justify-content: center; }
+  .sidebar-close-btn { display: block; }
+
+  /* Sidebar mobilde ekran dışına gizle, açılınca slide-in */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 280px;
+    z-index: 100;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 30px rgba(0,0,0,0.5);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* Main view tam genişlik */
+  .main-view { width: 100%; }
+
+  /* Top nav'da başlık boyutu küçük */
+  .top-nav { padding: 0 14px; }
+  .top-title { font-size: .8rem; }
+
+  /* Giriş yap butonu mobilde küçük */
+  .auth-btn { padding: 6px 12px; font-size: .78rem; }
+  .user-display-name { display: none; }
+
+  /* Welcome ekranı */
+  .welcome-screen { padding: 20px 16px; justify-content: flex-start; padding-top: 30px; }
+  .welcome-title { font-size: 2rem; }
+  .welcome-sub { font-size: .9rem; margin-bottom: 20px; }
+
+  /* Chips tek kolon */
+  .chips-grid { grid-template-columns: 1fr; gap: 10px; }
+  .clean-chip { padding: 12px 14px; }
+
+  /* Input bar */
+  .input-bar { padding: 10px 12px; }
+
+  /* Mesajlar */
+  .msg-row { padding: 8px 12px; gap: 10px; }
+  .msg-avatar { width: 32px; height: 32px; font-size: .85rem; flex-shrink: 0; }
+  .msg-content { font-size: .9rem; }
+}
+
+@media (max-width: 400px) {
+  .welcome-title { font-size: 1.6rem; }
+  .auth-btn span { display: none; }
+}
+
 .clean-chip{
   padding:14px 18px;border-radius:18px;border:1px solid var(--border-light);
   background:rgba(28,19,46,0.6);backdrop-filter:blur(8px);
@@ -483,12 +578,16 @@ body{
 <div class="aurora-bg-1"></div>
 <div class="aurora-bg-2"></div>
 
+<!-- SIDEBAR OVERLAY (mobile) -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
 <!-- SIDEBAR -->
-<aside class="sidebar">
+<aside class="sidebar" id="sidebar">
   <div class="sidebar-header">
     <div class="logo-box">
       <div class="logo-icon">L</div>
       <span class="logo-text">Luxa.Ai V6.5</span>
+      <button class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Kapat">✕</button>
     </div>
     <button class="new-chat-btn" onclick="startNewChat()">
       <span>+</span> Yeni Sohbet
@@ -511,6 +610,11 @@ body{
   <!-- Top Navigation -->
   <div class="top-nav">
     <div class="top-left">
+      <button class="hamburger-btn" id="hamburgerBtn" onclick="toggleSidebar()" aria-label="Menü">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
       <span class="top-title">✨ Akıllı Asistan</span>
     </div>
     
@@ -1145,6 +1249,7 @@ function startNewChat() {
   $('chatArea').style.display = 'none';
   $('messagesBox').innerHTML = '';
   renderSidebar();
+  closeSidebar();
   $('userInput').focus();
 }
 
@@ -1433,6 +1538,31 @@ function autoGrow(el) {
 function scrollEnd() {
   const el = $('chatArea');
   requestAnimationFrame(() => el.scrollTop = el.scrollHeight);
+}
+
+/* ═══════════ MOBİL SIDEBAR ═══════════ */
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const isOpen = sidebar.classList.contains('open');
+  if (isOpen) {
+    closeSidebar();
+  } else {
+    sidebar.classList.add('open');
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+}
+function closeSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  sidebar.classList.remove('open');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+}
+// Mobilde chip tıklanınca sidebar'ı kapat
+function useCustomChipMobile(buttonEl) {
+  closeSidebar();
 }
 
 /* ═══════════ BAŞLATMA (SESSION INITIALIZE) ═══════════ */
