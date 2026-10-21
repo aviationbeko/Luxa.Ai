@@ -819,42 +819,52 @@ function parseJwt(token) {
 }
 
 async function handleGoogleCredentialResponse(response) {
-  const payload = parseJwt(response.credential);
-  if (!payload || !payload.email) {
-    alert("Google doğrulaması çözülemedi.");
-    return;
+  try {
+    const payload = parseJwt(response.credential);
+    if (!payload || !payload.email) {
+      alert("Google doğrulaması çözülemedi. Lütfen tekrar deneyin.");
+      return;
+    }
+
+    const googleEmail = payload.email.trim().toLowerCase();
+    const googleName = payload.name || googleEmail.split('@')[0];
+    const googlePicture = payload.picture;
+
+    // Yükleniyor göster
+    const errEl = document.getElementById('authErrorMsg');
+    if (errEl) { errEl.style.color = '#a78bfa'; errEl.textContent = '⏳ Google hesabınız doğrulanıyor...'; }
+
+    let user = await getSupabaseUser(googleEmail);
+    if (!user) {
+      user = {
+        name: googleName,
+        email: googleEmail,
+        password: "GOOGLE_AUTH_ACCOUNT",
+        picture: googlePicture || "https://api.iconify.design/logos:google-icon.svg",
+        auth_type: "google",
+        created_at: Date.now() / 1000,
+        settings: {
+          theme: "theme-pink-purple",
+          font: "font-jakarta",
+          persona: "friendly",
+          custom_instructions: "",
+          temperature: 0.7
+        },
+        chats: []
+      };
+    } else {
+      user.name = googleName;
+      if (googlePicture) user.picture = googlePicture;
+    }
+
+    await saveSupabaseUser(user);
+    loadUserSession(user);
+    closeAuthModal();
+  } catch (err) {
+    console.error("Google giriş hatası:", err);
+    const errEl = document.getElementById('authErrorMsg');
+    if (errEl) { errEl.style.color = '#f87171'; errEl.textContent = '❌ Google girişinde hata oluştu. Lütfen sayfayı yenileyip tekrar deneyin.'; }
   }
-
-  const googleEmail = payload.email.trim().lower();
-  const googleName = payload.name || googleEmail.split('@')[0];
-  const googlePicture = payload.picture;
-
-  let user = await getSupabaseUser(googleEmail);
-  if (!user) {
-    user = {
-      name: googleName,
-      email: googleEmail,
-      password: "GOOGLE_AUTH_ACCOUNT",
-      picture: googlePicture || "https://api.iconify.design/logos:google-icon.svg",
-      auth_type: "google",
-      created_at: Date.now() / 1000,
-      settings: {
-        theme: "theme-pink-purple",
-        font: "font-jakarta",
-        persona: "friendly",
-        custom_instructions: "",
-        temperature: 0.7
-      },
-      chats: []
-    };
-  } else {
-    user.name = googleName;
-    if (googlePicture) user.picture = googlePicture;
-  }
-
-  await saveSupabaseUser(user);
-  loadUserSession(user);
-  closeAuthModal();
 }
 
 /* ═══════════ HESABA ÖZEL VERİ SENKRONİZASYONU ═══════════ */
@@ -945,7 +955,9 @@ function updateAuthUI() {
 }
 
 function openAuthModal(mode) {
-  $('authErrorMsg').style.display = 'none';
+  const errEl = $('authErrorMsg');
+  errEl.textContent = '';
+  errEl.style.display = 'block';
   switchAuthTab(mode);
   $('authModal').classList.add('show');
   initOfficialGoogleGIS();
@@ -1218,6 +1230,19 @@ async function sendMessage() {
   const inp = $('userInput');
   const text = inp.value.trim();
   if (!text || isBusy) return;
+
+  // Giriş yapılmamışsa auth modal'ı aç, mesajı beklet
+  if (!currentUser) {
+    openAuthModal();
+    // Mesajı input'ta tut ki kullanıcı giriş yapınca kaybetmesin
+    inp.value = text;
+    const errEl = document.getElementById('authErrorMsg');
+    if (errEl) {
+      errEl.style.color = '#a78bfa';
+      errEl.textContent = '💬 Mesaj göndermek için giriş yapman gerekiyor!';
+    }
+    return;
+  }
 
   isBusy = true;
   $('sendBtn').disabled = true;
