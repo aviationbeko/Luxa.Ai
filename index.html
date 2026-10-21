@@ -2,7 +2,7 @@
 <html lang="tr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Luxa.Ai V6.5</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#10024;</text></svg>">
 
@@ -319,56 +319,65 @@ body{
 }
 .sidebar-overlay.active { display: block; }
 
-@media (max-width: 768px) {
-  /* Hamburger ve close butonları göster */
-  .hamburger-btn { display: flex; align-items: center; justify-content: center; }
-  .sidebar-close-btn { display: block; }
+/* ── Her cihaza otomatik fluid ölçekleme ── */
+:root {
+  --fs-xs:   clamp(0.65rem, 1.5vw, 0.78rem);
+  --fs-sm:   clamp(0.75rem, 2vw,   0.88rem);
+  --fs-base: clamp(0.85rem, 2.5vw, 1rem);
+  --fs-lg:   clamp(1rem,    3vw,   1.25rem);
+  --fs-xl:   clamp(1.4rem,  5vw,   2rem);
+  --fs-2xl:  clamp(1.8rem,  7vw,   3rem);
+}
 
-  /* Sidebar mobilde ekran dışına gizle, açılınca slide-in */
+/* Tüm temel yazı boyutları fluid */
+body { font-size: var(--fs-base); }
+.top-title   { font-size: var(--fs-sm);  font-weight: 700; color: var(--text-sub); }
+.auth-btn    { font-size: var(--fs-sm);  padding: clamp(5px,1.2vw,8px) clamp(10px,2.5vw,18px); }
+.user-display-name { font-size: var(--fs-sm); }
+
+.welcome-title { font-size: var(--fs-2xl) !important; }
+.welcome-sub   { font-size: var(--fs-base); margin-bottom: clamp(16px, 4vw, 32px); }
+
+.chip-title    { font-size: var(--fs-sm); }
+.chip-desc     { font-size: var(--fs-xs); }
+
+.msg-content   { font-size: var(--fs-base); }
+.msg-name      { font-size: var(--fs-xs); }
+.think-text    { font-size: var(--fs-sm); }
+
+.sidebar-footer .settings-btn { font-size: var(--fs-xs); }
+.ver-tag       { font-size: var(--fs-xs); }
+
+/* Input textarea */
+#userInput { font-size: var(--fs-base); }
+
+/* Chips grid: 2 kolon ≥600px, 1 kolon <600px */
+.chips-grid { grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); }
+
+/* Mobil kırılım noktası */
+@media (max-width: 768px) {
+  .hamburger-btn    { display: flex; align-items: center; justify-content: center; }
+  .sidebar-close-btn { display: block; }
+  .user-display-name { display: none; }
+
   .sidebar {
     position: fixed;
     top: 0; left: 0; bottom: 0;
-    width: 280px;
+    width: clamp(240px, 75vw, 300px);
     z-index: 100;
     transform: translateX(-100%);
     box-shadow: 4px 0 30px rgba(0,0,0,0.5);
   }
-  .sidebar.open {
-    transform: translateX(0);
-  }
+  .sidebar.open { transform: translateX(0); }
 
-  /* Main view tam genişlik */
-  .main-view { width: 100%; }
+  .top-nav    { padding: 0 clamp(10px, 3vw, 20px); }
+  .input-bar  { padding: clamp(8px,2vw,14px) clamp(10px,3vw,20px); }
+  .welcome-screen { padding: clamp(16px,4vw,30px) clamp(12px,4vw,24px); }
 
-  /* Top nav'da başlık boyutu küçük */
-  .top-nav { padding: 0 14px; }
-  .top-title { font-size: .8rem; }
+  .msg-row   { padding: clamp(6px,2vw,14px) clamp(10px,3vw,20px); gap: clamp(8px,2vw,14px); }
+  .msg-avatar { width: clamp(28px,7vw,36px); height: clamp(28px,7vw,36px); }
 
-  /* Giriş yap butonu mobilde küçük */
-  .auth-btn { padding: 6px 12px; font-size: .78rem; }
-  .user-display-name { display: none; }
-
-  /* Welcome ekranı */
-  .welcome-screen { padding: 20px 16px; justify-content: flex-start; padding-top: 30px; }
-  .welcome-title { font-size: 2rem; }
-  .welcome-sub { font-size: .9rem; margin-bottom: 20px; }
-
-  /* Chips tek kolon */
-  .chips-grid { grid-template-columns: 1fr; gap: 10px; }
-  .clean-chip { padding: 12px 14px; }
-
-  /* Input bar */
-  .input-bar { padding: 10px 12px; }
-
-  /* Mesajlar */
-  .msg-row { padding: 8px 12px; gap: 10px; }
-  .msg-avatar { width: 32px; height: 32px; font-size: .85rem; flex-shrink: 0; }
-  .msg-content { font-size: .9rem; }
-}
-
-@media (max-width: 400px) {
-  .welcome-title { font-size: 1.6rem; }
-  .auth-btn span { display: none; }
+  .messages-box { padding: clamp(12px,4vw,24px) clamp(10px,3vw,20px) 10px; }
 }
 
 .clean-chip{
