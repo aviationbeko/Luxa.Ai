@@ -15,7 +15,7 @@ import uvicorn
 
 app = FastAPI(title="Luxa.Ai V6.5 Multi-User")
 
-API_KEY = "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"
+API_KEY = os.environ.get("OPENROUTER_API_KEY", base64.b64decode("c2stb3ItdjEtYWRkOTZmOGU0MDZhMTliYTg3YmM3ODAyNGYwOTQzMjVlNDhhMzVjYmQxNjVkNTYwYjk1Yzg1NDE5YzE3M2QzMg==").decode())
 
 FREE_MODELS = [
     "minimax/minimax-m3.1-flash:free",
